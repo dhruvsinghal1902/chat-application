@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/dhruv/Downloads/wp/Chat Application/Chat Application/server/db1.sqlite" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="125"/><column_width id="3" width="2379"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,8:mainmessages"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="connections" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="74"/><column index="2" value="88"/><column index="3" value="110"/><column index="4" value="104"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="messages" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="96"/><column index="2" value="79"/><column index="3" value="168"/><column index="4" value="162"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="sqlite_sequence" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="57"/><column index="2" value="52"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="users" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="74"/><column index="2" value="94"/><column index="3" value="63"/><column index="4" value="150"/><column index="5" value="52"/><column index="6" value="162"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">
+CREATE TABLE users(
+	user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	username TEXT(30) NOT NULL,
+	status TEXT(30) NOT NULL DEFAULT 'offline',
+	email TEXT(30) NOT NULL,
+	pwd TEXT(30) NOT NULL,
+	created_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE connections(
+	user_id INTEGER,
+	room_no TEXT(20) NOT NULL,
+	msg_status TEXT(20) DEFAULT 'pending' NOT NULL ,
+	other_user INTEGER,
+	CONSTRAINT fk_user FOREIGN KEY (user_id)
+		REFERENCES users(user_id),
+	CONSTRAINT fk_otheruser FOREIGN KEY (other_user)
+		REFERENCES users(user_id)
+);
+
+CREATE TABLE messages(
+	room_key TEXT(20),
+	sent_by INTEGER NOT NULL ,
+	message TEXT(255) NOT NULL,
+	sent_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT fk_sentby FOREIGN KEY (sent_by)
+		REFERENCES users(user_id)
+);
+SELECT count(message) FROM messages WHERE room_key='23';
+
+
+
+
+
+
+INSERT INTO connections(user_id,room_no,msg_status,other_user)
+	VALUES (1,'12','C', 2),
+			(2,'12','C', 1),
+			(1,'13', 'C', 3),
+			(3,'13','C', 1);
+DROP TABLe CONNECTIONs;
+
+
+SELECT * FROM connections;
+		
+INSERT INTO users(username,email,pwd)
+	VALUES ('Aakash', 'aakash@gmail.com', '12345'),
+			('Dhruv', 'dhruv@gmail.com', '1234'),
+			('Shiva', 'shiva@gmail.com', '123');
+		
+		
+UPDATE users SET status='offline' WHERE user_id=3;
+
+
+SELECT c.*,u.username,u.status, FROM users AS u INNER JOIN connections AS c ON c.other_user=u.USER_ID ;
+
+UPDATE users SET username='Dhruv Singhal' WHERE user_id=2;
+
+INSERT INTO messages(room_key,sent_by, message)
+	VALUES 
+	('12','2','Hello There Database'),
+	('12','1','Hi Database'),
+	('12','2','YOOOOO'),
+	('23','3',':)'),
+	('23','2',':(');
+
+UPDATE CONNECTIONs SET msg_status='complete' WHERE room_no = '12' AND user_id=1;
+
+SELECT * FROM messages WHERE room_key='12' ORDER BY sent_on;
+
+SELECT * FROM connections WHERE room_no='12' AND user_id=1;
+
+SELECT  * FROM USERs;
+
+UPDATE users SET status='offline' WHERE user_id=4;
+
+ALTER TABLE users alter status set DEFAULT 'offline' ;
+
+DELETE FROM MESSAGES WHERE room_key='23';
+DELETE FROM CONNECTIONs WHERE room_no='23';
+
+DELETE FROM MESSAGES;</sql><current_tab id="0"/></tab_sql></sqlb_project>
